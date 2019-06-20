@@ -1,0 +1,22 @@
+import random
+import itertools
+
+base2bits = {"A":"00", "C":"01", "G":"10", "T":"11"}
+bits2base = {"00":"A", "01":"C", "10":"G", "11":"T"}
+
+table = []
+with open('key.txt', 'rt') as f:
+    seq = f.read()
+    for quartet in [seq[i:i+4] for i in range(0, len(seq), 4)]:
+        table.append(quartet)
+
+assert(len(table)==256)
+
+with open('encrypted.bin', 'rb') as inf, open('decrypted.txt', 'wt') as outf:
+    data = inf.read()
+    for byte in data:
+        base_quartet = table[ord(byte)]
+        binary = ""
+        for base in  base_quartet:
+            binary += base2bits[base]
+        outf.write(chr(int(binary, 2)))
